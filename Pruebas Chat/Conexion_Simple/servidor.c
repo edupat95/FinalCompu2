@@ -14,7 +14,7 @@ int main(int argc, char * argv[]){
 	}
 
 	procrem.sin_family = AF_INET;
-	procrem.sin_port = htons(8080);
+	procrem.sin_port = htons(22000);
 	procrem.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	int a=1;
@@ -30,10 +30,10 @@ int main(int argc, char * argv[]){
 	sem_init(&sem_empleados_on,1,1); //PARA PROTEGER EL ARCHIVO Y QUE SOLO UN PROCESO ENTRE A EDITARLO A LA VEZ
 	//FIN INICIALIZACION
 
-	int pid=0; //para guardar el id del proceso
+	int pid; //para guardar el id del proceso
 
 	while ((connfd = accept(fd,NULL, 0)) > 0 ){
-		printf("---> confd vale %d\n",connfd); //connfd es el fd de la conexion, por este fd tiene que
+		printf("---> confd vale %d\n",connfd); //connfd es ek el fd de la conexion, por este fd tiene que
 		pid=fork();															//responder el cliente
 		if(pid==0){
 			menu((void*) (intptr_t) connfd,fd_empleados_on, sem_empleados_on);

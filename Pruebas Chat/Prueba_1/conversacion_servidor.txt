@@ -1,0 +1,9 @@
+
+
+------Se inicio el chat-----
+
+
+ otro usuario (17:51) -> hola
+ yo (17:51) -> hola
+ otro usuario (17:51) -> como estas?
+ yo (17:51) -> adios
