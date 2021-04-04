@@ -7,3 +7,10 @@
  yo (17:51) -> hola
  otro usuario (17:51) -> como estas?
  yo (17:51) -> adios
+
+------Se inicio el chat-----
+
+
+ otro usuario (12:45) -> hola
+ yo (12:45) -> que tal
+ otro usuario (12:45) -> adios
