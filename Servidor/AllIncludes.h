@@ -1,5 +1,6 @@
-#ifndef MENUH
-#define MENUH
+#ifndef ALLINCLUDESH
+#define ALLINCLUDESH
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -20,11 +21,16 @@
 #include <ctype.h>
 #include <sys/wait.h>
 #include <pthread.h>
-#include "menuCliente.h"
-#include "authenticate.h"
-#include "cargarEmpleado.h"
 #include <semaphore.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <unistd.h>
 
-void *menu (void * connfd, char *fd_empleados_on, sem_t sem_empleados_on);
 
 #endif

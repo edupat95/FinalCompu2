@@ -4,7 +4,7 @@ LDLIBS = -pthread
 TARGETS = servidor
 all: $(TARGETS)
 #tp2: utils.c gestion_argumentos.c gestion_partes.c gestion_hijos.c
-servidor	: menu.c servidor.c authenticate.c archivoDao.c comunicar.c menuCliente.c cargarEmpleado.c
+servidor	: menu.c servidor.c authenticate.c#cargarEmpleado.c  auxiliares.c buscarEmpleado.c#archivoDao.c comunicar.c menuCliente.c 
 	$(CC) $(CFLAGS) $(LDLIBS) -o $@ $^ -lrt
 clean:
 	$(RM) $(TARGETS) *.o *~ *.txt

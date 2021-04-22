@@ -1,3 +1,5 @@
+#ifndef MENUH
+#define MENUH
 #include <unistd.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -8,6 +10,9 @@
 #include <arpa/inet.h>
 #include <signal.h>
 #include <netdb.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -15,8 +20,12 @@
 #include <ctype.h>
 #include <sys/wait.h>
 #include <pthread.h>
-#include <sys/mman.h>
+//#include "menuCliente.h"
+#include "authenticate.h"
+//#include "cargarEmpleado.h"
 #include <semaphore.h>
+#include "AllIncludes.h"
 
-int cargarEmpleado(char *empleado, char *fd_empleados_on, sem_t sem_empleados_on);
+void *menu (void * connfd, char ip[], char *fd_empleados_on, sem_t sem_empleados_on);
 
+#endif

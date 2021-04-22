@@ -1,5 +1,5 @@
-#ifndef COMUNICARH
-#define COMUNICARH
+#ifndef AUTHENTICATEH
+#define AUTHENTICATEH
 #include <stdio.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -8,7 +8,9 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include "menu.h"
+//#include "auxiliares.h"
 
-void comunicar(int fd, char *op, char *fd_empleados_on);
+int authenticate();
 
 #endif
