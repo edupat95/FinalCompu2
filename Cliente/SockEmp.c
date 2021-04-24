@@ -70,13 +70,14 @@ int levantarSocket(void *fd, char *ipStr){
     read(fdCmp,buffRecived,sizeof(buffRecived));// espramos a recibir el primer saludo
     printf("-> %s \n",buffRecived);
     bzero(buffRecived,100);
-    
+
     while(1){
       read(1,buffSend,sizeof(buffSend)); //leemos desde la terminal del empleado
       write(fdCmp,buffSend,strlen(buffSend)); //enviamos la respuesta al comprador
       bzero(buffSend,100); //vaciamos el buffer
       read(fdCmp,buffRecived,sizeof(buffRecived)); //Esperamos respuesta del comprador
       write(1,buffRecived,strlen(buffRecived)); //Mostramos el mensaje al empleado
+      bzero(buffSend,100);
     }
   }
 
