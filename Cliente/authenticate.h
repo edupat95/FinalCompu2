@@ -9,8 +9,9 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include "menu.h"
+#include "AllIncludes.h"
 //#include "auxiliares.h"
 
-int authenticate();
+char *login(void *connfd);
 
 #endif

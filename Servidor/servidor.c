@@ -45,7 +45,8 @@ int main(int argc, char * argv[]){
 	while ((connfd = accept(fd,(struct sockaddr *)&direccionCliente,&tam_direccion)) > 0 ){
 
 		struct in_addr clientIp = direccionCliente.sin_addr; //new
-		char ipStr[INET_ADDRSTRLEN]; //new
+		char ipStr[100]; //new
+		bzero(ipStr,100);
 	  inet_ntop(AF_INET, &clientIp, ipStr, INET_ADDRSTRLEN);
 		printf("---> confd->%d ip->%s\n",connfd,ipStr); //connfd es el fd de la conexion, por este fd tiene que
 		pid=fork();//responder el cliente

@@ -26,6 +26,8 @@
 #include <semaphore.h>
 #include "AllIncludes.h"
 
-bool menuComprador (int sockfd);
+char *menuComprador();
+
+
 
 #endif

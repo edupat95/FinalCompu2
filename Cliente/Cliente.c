@@ -1,9 +1,14 @@
 #include "AllIncludes.h"
+#include "authenticate.h"
+#include "menuComprador.h"
+#include "SockEmp.h"
+#include "SockCmp.h"
 
 int fd;
 void handler(int nro);
 
 int main(void){
+  //porobarSalvar();
   struct sockaddr_in direccionServidor;
 
   int fdSrv = socket(AF_INET, SOCK_STREAM, 0);
@@ -33,10 +38,50 @@ int main(void){
     printf("La peticion enviada fue-> %s",buffSend);
 
     if(!strcmp(buffSend,"1\n")){
-      printf("deberia pedir usuario y clave\n");
-      return 0;
+      char *ipStr=login((void*) (intptr_t) fdSrv);
+
+      if(strcmp(ipStr,"")){
+        printf("El ip que nos devolvio el Servidor es ->%s\n",ipStr);
+        printf("Deriamos enviarle al Servidor el puerto a utilizar\n");
+        int res_sock=levantarSocket((void*) (intptr_t) fdSrv,ipStr);
+        printf("res_sock->%d",res_sock);
+        //si el empleado ser desconecta en esta fucnion con ctrl+c deberiamos llamar al handler
+      }else{
+        printf("Error al loguearse.\n");
+        break; //salimos del segundo if
+        break; //salimos del primer if para que no retorne 0
+      }
     } else if(!strcmp(buffSend,"2\n")){
       printf("Deberia conectar con el empleado\n");
+      char *tipo=menuComprador((void*) (intptr_t) fdSrv);
+      printf("Escogio un empleado del tipo->-%s-",tipo);
+
+      bzero(buffSend,100);
+      strncpy(buffSend,tipo,strlen(tipo));
+      strncat(buffSend,"\n",2);
+      printf("buffSend->%s\n",buffSend);
+      write(fdSrv,buffSend,strlen(buffSend)); //le enviamos al servidor el tipo de empleado que estamos buscando
+      //---------------ESPERAMOS AL SERVUDOR QUE ENVIE DATOS DEL EMPLEADO--------------------
+      bzero(buffRecived,100);
+      read(fdSrv,buffRecived,sizeof(buffRecived));
+      printf("buffRecived->-%s-\n",buffRecived);
+      char *datos_empleado=(char*)malloc(128*sizeof(char));
+      strncpy(datos_empleado,buffRecived,strlen(buffRecived)); // Guardamos los datos del empleado en datos_empleado
+      bzero(buffRecived,100);
+      printf("datos_empleado->-%s-\n",datos_empleado);
+
+      if(!strcmp(datos_empleado,"\n")){
+          printf("Lo sentimos... no hay ningun empleado en este momento intente mas tarde\n");
+          return 0;
+      }
+      else{
+          printf("FC Cliente.c -> los datos son datos_empleado->-%s-\n",datos_empleado);
+          printf("Llamamos a la fc SockEmp para establecer el chat\n");
+          int retorno = conectar((void*) (intptr_t) fdSrv,datos_empleado);
+          printf("Menu.c -> retorno %d",retorno);
+      }
+
+
       return 0;
     }else{
       printf("Opcion incorrecta\n");

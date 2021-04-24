@@ -1,54 +1,25 @@
-#include "authenticate.h"
 #include <stdio.h>
-#include <stdio_ext.h>
-
+#include "authenticate.h"
+//#include <stdio_ext.h>
 
 char *authenticate(void *connfd) {
+	char *datos_log=login(connfd);
+
+	printf("FC authenticate: logind retorna datos_log->%s",datos_log);
 	//---------------- VARIABLES --------------------------
-	int fd = (int) (intptr_t) connfd;
+	//int fd = (int) (intptr_t) connfd;
 	char *usr, *pass;
-	char buff_rx[100]; //buffer para recibir
-	char buff_ex[100]; //buffer para escribir
 	usr = (char*)malloc(30*(sizeof(char)));
 	pass = (char*)malloc(30*(sizeof(char)));
 	//--------------------PEDIMOS DATOS AL EMPLEADO--------------
-	strncpy(buff_ex,"Usuario:\n",10);
-	write(fd, buff_ex, strlen(buff_ex)); //Le mandamos "Usuario: " al cliente
-	bzero(buff_ex, 100);
-
-	bzero(buff_rx, 100);
-	read(fd, buff_rx, sizeof(buff_rx)); //leemos el usuario que manda el cliente
-	printf("buff_rx->-%s- tam->%ld \n",buff_rx,strlen(buff_rx));
-	strncpy(usr,buff_rx,strlen(buff_rx)); //Copiamos el usuario en la variable usr
-
-	strncpy(buff_ex,"Clave:\n",8);
-	write(fd, buff_ex, strlen(buff_ex));//Le mandamos "Clave: " al cliente
-	bzero(buff_ex, 100);
-
-	bzero(buff_rx, 100);
-	read(fd, buff_rx, sizeof(buff_rx)); //leemos la clave que manda el cliente
-	printf("buff_rx->-%s- tam->%ld",buff_rx,strlen(buff_rx));
-	strncpy(pass,buff_rx,strlen(buff_rx)); //Copiamos el usuario en la variable usr
-	bzero(buff_rx, 100);
-
-	usr = strtok(usr,"\n");
-	pass = strtok(pass,"\n");
-
+	usr = strtok(datos_log,"/");
+	if(usr!=NULL){
+		pass = strtok(NULL,"\n\0");
+	}
 	printf("\nDatos que nos quedan para trabajar en el servidor:\n usr->-%s-\npass->-%s-\n",usr,pass);
 
-	//------------------ENVIAMOS LOS DATOS PARA SER COMPARADOS----------------
-	char *retorno=authenticate_ok(usr, pass, connfd);
-	if(!strcmp(retorno,"")){
-		strcpy(buff_ex,"0\n");
-		write(fd, buff_ex, strlen(buff_ex));//Le mandamos "Clave: " al cliente
-		bzero(buff_ex, 100);
-	} else {
-		strcpy(buff_ex,"1\n");
-		write(fd, buff_ex, strlen(buff_ex));//Le mandamos "Clave: " al cliente
-		bzero(buff_ex, 100);
-	}
-	return retorno;
-	//return authenticate_ok(usr, pass, connfd);
+	//------------------ENVIAMOS LOS DATOS PARA SER COMPARADOS Y LOS RETORNAMOS----------------
+	return authenticate_ok(usr, pass, connfd);
 }
 
 char *authenticate_ok(char *usr, char *pass, void * connfd) { // retorna fd/id/usuario/tipo
@@ -72,8 +43,8 @@ char *authenticate_ok(char *usr, char *pass, void * connfd) { // retorna fd/id/u
 
 	strcpy(empleado,comparar(usr,pass)); //comparamos datos de logueo con los datos del archivo
 
-	free(usr); //liberamos las variables que ya no utilizamos
-	free(pass);//liberamos las variables que ya no utilizamos
+	//free(usr); //liberamos las variables que ya no utilizamos
+	//free(pass);//liberamos las variables que ya no utilizamos
 
 	if(strcmp(empleado,vacio)){
 		printf("El usuario existe y sus datos son --> %s \n\n",empleado);
@@ -85,7 +56,7 @@ char *authenticate_ok(char *usr, char *pass, void * connfd) { // retorna fd/id/u
 		free(auxfd);//liberamos las variables que ya no utilizamos
 		return auxempleado;  // retorna fd/id/usuario/tipo
 	}else{
-		printf("ERROR AL AUTENTICARSE\n");
+		printf("FC authenticate_ol -> ERROR AL AUTENTICARSE\n");
 		free(empleado);//liberamos las variables que ya no utilizamos
 		free(auxfd);//liberamos las variables que ya no utilizamos
 		free(auxempleado);//liberamos las variables que ya no utilizamos
@@ -172,4 +143,20 @@ char *comparar(char *usr, char *pass) {
 
 
 	return vacio;
+}
+
+char *login(void *connfd){
+	char *datos_log=(char*)malloc(64*sizeof(char)); //variable para retornar en la funcion
+	char buffRecived[100]; //variable para recibir los datos
+	int fdEmpleado=0; //fd nescesario para pedirle los datos al empleado
+	fdEmpleado = (int) (intptr_t) connfd;
+
+	printf("[SERVER]: Un empleado esta intentado loguearse, esperando datos...\n");
+
+	read(fdEmpleado, buffRecived, sizeof(buffRecived)); // Esperamos por los datos de logueo
+	printf("datos recibidos-->-%s- tam->%ld",buffRecived,strlen(buffRecived));
+	strncpy(datos_log,buffRecived,strlen(buffRecived)); //copiamos lo que el empleado envia en la variable en la variable de retorno
+	bzero(buffRecived,100); //vaciamos buffer
+
+	return datos_log;
 }
