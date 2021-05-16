@@ -7,7 +7,19 @@
 int fd;
 void handler(int nro);
 
-int main(void){
+int main(int argc, char * argv[]){
+  if(argc<2){
+    printf("Error al ingresar argumentos");
+    return 0;
+  }
+
+  char *ipSrvStr=malloc(32*sizeof(char));
+  strncpy(ipSrvStr,argv[1],strlen(argv[1]));
+  char *portSrvStr=malloc(32*sizeof(char));
+  strncpy(portSrvStr,argv[2],strlen(argv[2]));
+
+  printf("Intenta conectarse a-> IP(%s) PUERTO(%s) \n",ipSrvStr,portSrvStr);
+
   //porobarSalvar();
   struct sockaddr_in direccionServidor;
 
@@ -16,13 +28,14 @@ int main(void){
   memset(&direccionServidor,0,sizeof(direccionServidor));
 
   direccionServidor.sin_family = AF_INET;
-  direccionServidor.sin_addr.s_addr = inet_addr("127.0.0.1"); // direccion a la que se va a conectar
-  direccionServidor.sin_port = htons(22000);
+  direccionServidor.sin_addr.s_addr = inet_addr(ipSrvStr); // direccion a la que se va a conectar
+  direccionServidor.sin_port = htons(atoi(portSrvStr));
 
   char buffSend[100];//buffer de escritura;
   char buffRecived[100];//buffer de recepcion;
   bzero(buffSend,100);
   bzero(buffRecived,100);
+
 
   if(connect(fdSrv, (void*)&direccionServidor, sizeof(direccionServidor)) != 0){
     perror("No se pudo conectar");
@@ -42,7 +55,7 @@ int main(void){
 
       if(strcmp(ipStr,"")){
         printf("El ip que nos devolvio el Servidor es ->%s\n",ipStr);
-        printf("Deriamos enviarle al Servidor el puerto a utilizar\n");
+        //printf("Deriamos enviarle al Servidor el puerto a utilizar\n");
         int res_sock=levantarSocket((void*) (intptr_t) fdSrv,ipStr);
         printf("res_sock->%d",res_sock);
         //si el empleado ser desconecta en esta fucnion con ctrl+c deberiamos llamar al handler

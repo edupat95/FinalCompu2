@@ -43,7 +43,7 @@ int levantarSocket(void *fd, char *ipStr){
   char *sport=(char*)malloc(15*sizeof(char));
   sprintf(sport,"%d", iport);
 
-  printf("Puerto string -> %s\n",sport);
+  //printf("Puerto string -> %s\n",sport);
   //unsigned int leng;     /* length of client address */
   //struct sockaddr_in client;
   listen(sock, 1);
@@ -59,7 +59,7 @@ int levantarSocket(void *fd, char *ipStr){
   write(fdSrv,buffSend,strlen(buffSend));
   bzero(buffSend,100);
   //-----------------------------------------------------------------------------
-  printf("esperando que alguien se conecte\n");
+  printf("esperando que alguien se conecte...\n");
   fdCmp = accept(sock,NULL, 0);
   if (fdCmp < 0)
   {

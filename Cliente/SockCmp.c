@@ -47,7 +47,7 @@ int conectar(void *fd, char *datos_empleado){
   }
 
 
-
+  close(fdEmp);
   return 0;
 }
 

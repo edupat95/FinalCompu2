@@ -63,8 +63,8 @@ void* menu(void *connfd, char ipStr[] ,char *fd_empleados_on, sem_t sem_empleado
 
 			char *datos_empleado=buscarEmpleado(fd_empleados_on,sem_empleados_on,tipo); //BUSCAMOS AL EMPLEADO
 			printf("\nLos datos que tenemos que enviarle al cliente -> -%s-\n",datos_empleado);
-			printf("\nLos datos que tenemos que enviarle al cliente -> %s\n",datos_empleado);
-			printf("\nLos datos que tenemos que enviarle al cliente -> %s\n",datos_empleado);
+			//printf("\nLos datos que tenemos que enviarle al cliente -> %s\n",datos_empleado);
+			//printf("\nLos datos que tenemos que enviarle al cliente -> %s\n",datos_empleado);
 
 			if(!strcmp(datos_empleado,"")){
 				bzero(buffSend,100);

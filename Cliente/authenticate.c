@@ -10,18 +10,20 @@ char *login(void *connfd){
   bzero(buffSend,100);
   bzero(buffRecived,100);
 
+  //printf("sizeof(usuario)=%ld",30*sizeof(char));
+
   int fdSrv=0;
   fdSrv = (int) (intptr_t) connfd;
   printf("Usuario: \n");
-  read(1,usuario,sizeof(usuario));
+  read(1,usuario,30*sizeof(char));
   printf("Clave: \n");
-  read(1,clave,sizeof(clave));
+  read(1,clave,30*sizeof(char));
 
   usuario=strtok(usuario,"\n");//quitamos el salto de linea
   clave=strtok(clave,"\n");//quitamos el salto de linea
 
 
-  printf("-> clave: -%s- usuario:-%s-",clave,usuario);
+  printf("-> usuario:-%s- clave: -%s- ",usuario,clave);
 
   printf("Datos usr->-%s- clave->-%s-\n",usuario,clave);
 

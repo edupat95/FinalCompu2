@@ -152,7 +152,6 @@ char *login(void *connfd){
 	fdEmpleado = (int) (intptr_t) connfd;
 
 	printf("[SERVER]: Un empleado esta intentado loguearse, esperando datos...\n");
-
 	read(fdEmpleado, buffRecived, sizeof(buffRecived)); // Esperamos por los datos de logueo
 	printf("datos recibidos-->-%s- tam->%ld",buffRecived,strlen(buffRecived));
 	strncpy(datos_log,buffRecived,strlen(buffRecived)); //copiamos lo que el empleado envia en la variable en la variable de retorno
