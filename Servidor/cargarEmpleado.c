@@ -15,13 +15,13 @@ int cargarEmpleado(char *empleado, char *fd_empleados_on, sem_t sem_empleados_on
 		printf("%c",fd_empleados_on[i]);
 	}
 	sem_post(&sem_empleados_on);
-	
+
 	return 1;
 }
 
 //op==1 devuelve fd  //op==2 id //op==3 usuario//op==4 tipo //op==5 ip //op==6 puerto
 char *salvar(char *datos_empleado, int op){
-	//printf("fc:salvar, datos_empleado->%s\n",datos_empleado);
+	printf("fc:salvar, datos_empleado->%s\n",datos_empleado);
 	char *basura; //NOSE POQUE MOTIVO LLEGA BASURA A LA FUNCION
 	char *fd;
 	char *id;
@@ -87,7 +87,7 @@ char *salvar(char *datos_empleado, int op){
 		}
 	}
 	//printf("Escogio la op %d\n",op);
-	return NULL; //a ocurriedo un problema
+	return NULL; // ocurrio un problema
 }
 
 //tener en cuenta que hay que enviar datos_empleado sin el salto de linea

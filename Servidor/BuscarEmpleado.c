@@ -23,6 +23,7 @@ char *buscarEmpleado(char *fd_empleados_on, sem_t sem_empleados_on, char *tipo){
     //aca deberia desconectar al cliente.
   } else {
     printf("Llamar funcion para obetener IP y PUERTO del empleado\n");
+    printf("Los datos que cargaremos son tipo->%s y fd_empleados_on->%s \n",tipo,fd_empleados_on);
     datos_empleado=salvarEmpleado(fd_empleados_on,tipo);
     printf("Buscar empleado Los datos salvados del empleado %s\n",datos_empleado);
     if(datos_empleado!=NULL){
@@ -44,17 +45,22 @@ char *buscarEmpleado(char *fd_empleados_on, sem_t sem_empleados_on, char *tipo){
 
 
 char *salvarEmpleado(char *fd_empleados_on, char *tipo){
-  printf("FC salvarEmpleado llega-> tipo->-%s-",tipo);
+  printf("hola salvar empleado");
+  printf("FC salvarEmpleado llega-> tipo->-%s- y la memoria tiene fd_empleados_on->-%s-",tipo,fd_empleados_on);
+
   char *datos_empleado=NULL;
   datos_empleado=malloc(64);
 
-  while(*fd_empleados_on!='\0'){
-    if(*fd_empleados_on=='\n'){
-      if(!strcmp(tipo,salvar(datos_empleado,4))){
-      return datos_empleado;
+  while(*fd_empleados_on!='\0'){ //Si no se termino el archivo entra
+    if(*fd_empleados_on=='\n'){ // si encontramos un salto de linea es porque tenemos armados los datos del empleado
+      if(!strcmp(tipo,salvar(datos_empleado,4))){ //si tipo es igual al tipo a tipo del empleado de la memoria entra
+        return datos_empleado; //retornamos los datos del empleado encontrado
+      } else { //en el caso de que no sea igual pasamos al siguiente caracter
+        strcpy(datos_empleado,"");//vaciamos datos_empleado porque no coincide
+        fd_empleados_on++; //siguiente caracter
       }
     } else {
-      strncat(datos_empleado,&(*fd_empleados_on),1);
+      strncat(datos_empleado,&(*fd_empleados_on),1); //guardamos caracter en datos_empleado
       fd_empleados_on++;
     }
   }
