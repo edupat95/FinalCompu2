@@ -37,15 +37,18 @@ int conectar(void *fd, char *datos_empleado){
   strncat(buffSend," ya estoy conectado...\n",24);
   write(fdEmp,buffSend,strlen(buffSend)); //enviamos el primer saludo
   bzero(buffSend,100);
-  while(1){
+  while(!strstr(buffRecived, "adios") && !strstr(buffSend, "adios")){
+    bzero(buffRecived,100);
     read(fdEmp,buffRecived,sizeof(buffRecived)); //leemos el mensaje que envia el empleado
     write(1,buffRecived,strlen(buffRecived)); //mostramos en la terminal del cliente el mensaje
-    bzero(buffRecived,100); //limpiamos el buffer
-    read(1,buffSend,sizeof(buffSend));// leemos la respuesta del cliente
-    write(fdEmp,buffSend,strlen(buffSend)); //enviamos la respuesta al empleado
-    bzero(buffSend,100);
-  }
 
+    if(!strstr(buffRecived, "adios")){
+      bzero(buffSend,100);
+      read(1,buffSend,sizeof(buffSend));// leemos la respuesta del cliente
+      write(fdEmp,buffSend,strlen(buffSend)); //enviamos la respuesta al empleado
+    }
+  }
+  printf("--------------Chat finalizado--------------\n");
 
   close(fdEmp);
   return 0;

@@ -15,15 +15,16 @@ char *buscarEmpleado(char *fd_empleados_on, sem_t sem_empleados_on, char *tipo){
 
   sem_wait(&sem_empleados_on); // Editamos fd_empleados_on
   printf("Los datos con los que nos encontraremos son +++\n%s+++\n",fd_empleados_on);
+
   if(!strcmp(fd_empleados_on,vacio)){
     printf("NO HAY NINGUN EMPLEADO ON\n");
     sem_post(&sem_empleados_on);
     return "";
     //aca deberia desconectar al cliente.
   } else {
-    //printf("Llamar funcion para obetener IP y PUERTO del empleado\n");
+    printf("Llamar funcion para obetener IP y PUERTO del empleado\n");
     datos_empleado=salvarEmpleado(fd_empleados_on,tipo);
-    //printf("Buscar empleado Los datos salvados del empleado %s\n",datos_empleado);
+    printf("Buscar empleado Los datos salvados del empleado %s\n",datos_empleado);
     if(datos_empleado!=NULL){
       //printf("Datos empleados no es nulo datos_empleado-> %s\n",datos_empleado);
       //printf("FC(buscarEmpleado): aux->\n>>>%s<<<\n",aux); //MOSTRAMOS DATOS NUEVOS

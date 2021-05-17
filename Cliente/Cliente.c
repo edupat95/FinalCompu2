@@ -57,7 +57,7 @@ int main(int argc, char * argv[]){
         printf("El ip que nos devolvio el Servidor es ->%s\n",ipStr);
         //printf("Deriamos enviarle al Servidor el puerto a utilizar\n");
         int res_sock=levantarSocket((void*) (intptr_t) fdSrv,ipStr);
-        printf("res_sock->%d",res_sock);
+        printf("res_sock->%d\n",res_sock);
         //si el empleado ser desconecta en esta fucnion con ctrl+c deberiamos llamar al handler
       }else{
         printf("Error al loguearse.\n");

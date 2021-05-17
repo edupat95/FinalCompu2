@@ -71,19 +71,24 @@ int levantarSocket(void *fd, char *ipStr){
     printf("-> %s \n",buffRecived);
     bzero(buffRecived,100);
 
-    while(1){
+    while(!strstr(buffRecived, "adios") && !strstr(buffSend, "adios")){
+      bzero(buffSend,100);
       read(1,buffSend,sizeof(buffSend)); //leemos desde la terminal del empleado
       write(fdCmp,buffSend,strlen(buffSend)); //enviamos la respuesta al comprador
-      bzero(buffSend,100); //vaciamos el buffer
-      read(fdCmp,buffRecived,sizeof(buffRecived)); //Esperamos respuesta del comprador
-      write(1,buffRecived,strlen(buffRecived)); //Mostramos el mensaje al empleado
-      bzero(buffSend,100);
+      if(!strstr(buffSend, "adios")){
+        bzero(buffRecived,100);
+        read(fdCmp,buffRecived,sizeof(buffRecived)); //Esperamos respuesta del comprador
+        write(1,buffRecived,strlen(buffRecived)); //Mostramos el mensaje al empleado
+      }
     }
   }
+printf("--------------Chat finalizado--------------\n");
+
+
 
 if (close (sock) < 0 ) {
-  printf("did not close: %s\n", strerror(errno));
-  return 0;
+    printf("did not close: %s\n", strerror(errno));
+    return 0;
 }
   return 0;
 }
