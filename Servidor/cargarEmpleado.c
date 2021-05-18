@@ -1,11 +1,16 @@
 #include "cargarEmpleado.h"
 
 
-int cargarEmpleado(char *empleado, char *fd_empleados_on, sem_t sem_empleados_on) {
+int cargarEmpleado(char *empleado, char *fd_empleados_on, sem_t *sem_empleados_on) {
 	//empleado nos llega con los siguientes datos fd/id/usuario/tipo/ip/puerto
 
 	//---VAMOS A TRABAJAR CON LA MEMORIA COMPARTIDA---
-	sem_wait(&sem_empleados_on);
+	sem_wait(sem_empleados_on);
+
+	//printf("+++Esperando...\n");
+	//sleep(1000);
+	//printf("+++Fin-espera...\n");
+
 	printf("FC cargarEmpleado: DATOS DEL EMPLEADO CON IP Y PUERTO -> -%s-\n",empleado);
 	strncat(fd_empleados_on,empleado,strlen(empleado));
 
@@ -14,7 +19,7 @@ int cargarEmpleado(char *empleado, char *fd_empleados_on, sem_t sem_empleados_on
 	for(int i=0; i<strlen(fd_empleados_on); i++){
 		printf("%c",fd_empleados_on[i]);
 	}
-	sem_post(&sem_empleados_on);
+	sem_post(sem_empleados_on);
 
 	return 1;
 }

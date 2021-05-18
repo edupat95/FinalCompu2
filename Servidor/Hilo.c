@@ -13,6 +13,13 @@ char *pedirDatos(){
   return datos_conexion;
 }
 void *hilo(void * ipStr){
+  //pthread_detach(pthread_self());
+  /*
+  if (pthread_detach(pthread_self()) != 0) {
+    perror("!!!!pthread_detach() error");
+    exit(4);
+  }
+  */
   char *ipCliStr=(char *)ipStr;
   //CREAMSO EL HILO PARA GUARDAR LOS DATOS DE CONEXION
   char *datos_conexion=pedirDatos();
@@ -21,6 +28,7 @@ void *hilo(void * ipStr){
   strncat(datos_conexion,ipCliStr,strlen(ipCliStr));
   strncat(datos_conexion,"\n",2);
   saveConn(datos_conexion);
+  printf("!!!!\n");
   pthread_exit(NULL); // ESTO ES PARA TERMINAR EL HILO PRINCIPAL Y QUE LOS DEMAS HIlOS SE SIGAN EJECUTANDO
 }
 

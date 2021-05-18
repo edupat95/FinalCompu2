@@ -21,7 +21,7 @@
 #include <sys/mman.h>
 #include <semaphore.h>
 
-int cargarEmpleado(char *empleado, char *fd_empleados_on, sem_t sem_empleados_on);
+int cargarEmpleado(char *empleado, char *fd_empleados_on, sem_t *sem_empleados_on);
 
 char *fabricarDatos(char *fd_empleados_on);
 

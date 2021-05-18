@@ -1,6 +1,6 @@
 #include "BuscarEmpleado.h"
 
-char *buscarEmpleado(char *fd_empleados_on, sem_t sem_empleados_on, char *tipo){
+char *buscarEmpleado(char *fd_empleados_on, sem_t *sem_empleados_on, char *tipo){
   if(!strcmp(tipo,"1\n")){
     strncpy(tipo,"ventas",7);
   }else if(!strcmp(tipo,"2\n")){
@@ -13,12 +13,13 @@ char *buscarEmpleado(char *fd_empleados_on, sem_t sem_empleados_on, char *tipo){
   char *datos_empleado=NULL;
   char *vacio="";
 
-  sem_wait(&sem_empleados_on); // Editamos fd_empleados_on
+  sem_wait(sem_empleados_on); // Editamos fd_empleados_on
+
   printf("Los datos con los que nos encontraremos son +++\n%s+++\n",fd_empleados_on);
 
   if(!strcmp(fd_empleados_on,vacio)){
     printf("NO HAY NINGUN EMPLEADO ON\n");
-    sem_post(&sem_empleados_on);
+    sem_post(sem_empleados_on);
     return "";
     //aca deberia desconectar al cliente.
   } else {
@@ -33,11 +34,11 @@ char *buscarEmpleado(char *fd_empleados_on, sem_t sem_empleados_on, char *tipo){
       char *aux=quitarEmpleado(fd_empleados_on,datos_empleado); //NO ME GUSTO COMO QUEDO
       strcpy(fd_empleados_on,aux); // REESCRIVIMOS LA MEMORIA SIN EL EMPLEADO DEMANDADO
       //printf("FC(buscarEmpleado):(DESPUES DE EDITAR) fd_empleados_on->\n>>>%s<<<\n",fd_empleados_on); //MOSTRAMOS fd_empleados_on CON LOS DATOS MODIFICADOS
-      sem_post(&sem_empleados_on); // Liberamos fd_empleados_on
+      sem_post(sem_empleados_on); // Liberamos fd_empleados_on
       return datos_empleado;
     } else {
       printf("Error: datos_empleados es nulo\n");
-      sem_post(&sem_empleados_on);
+      sem_post(sem_empleados_on);
       return "";
     }
   }

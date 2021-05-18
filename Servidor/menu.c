@@ -1,7 +1,7 @@
 #include "menu.h"
 #include "cargarEmpleado.h"
 #include "BuscarEmpleado.h"
-void* menu(void *connfd, char ipStr[] ,char *fd_empleados_on, sem_t sem_empleados_on) {
+void* menu(void *connfd, char ipStr[] ,char *fd_empleados_on, sem_t *sem_empleados_on) {
 	int fdClient=0;
 	fdClient= (int) (intptr_t) connfd;
 

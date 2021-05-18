@@ -3,9 +3,9 @@
 #include "Servidor.h"
 #include "Hilo.h"
 char *fd_empleados_on;
-sem_t sem_empleados_on;
-
+sem_t *sem_empleados_on;
 int main(int argc, char * argv[]){
+	signal(SIGCHLD, SIG_IGN);
 	int fd, connfd;
 	char *ipSrvStr=serchIpPort(1);
 	char *portSrvStr=serchIpPort(2);
@@ -31,8 +31,9 @@ int main(int argc, char * argv[]){
 
 	listen(fd, 50);
 	//INICIALIZAMOS VARIABLES QUE COMPARTIRAN LOS PROCESOS
+	sem_empleados_on=mmap(NULL, sizeof(sem_empleados_on), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 	fd_empleados_on=mmap(NULL,256,PROT_READ|PROT_WRITE,MAP_ANONYMOUS|MAP_SHARED,-1,0);
-	sem_init(&sem_empleados_on,1,1); //PARA PROTEGER EL ARCHIVO Y QUE SOLO UN PROCESO ENTRE A EDITARLO A LA VEZ
+	sem_init(sem_empleados_on,1,1); //PARA PROTEGER EL ARCHIVO Y QUE SOLO UN PROCESO ENTRE A EDITARLO A LA VEZ
 	//FIN INICIALIZACION
 
 	int pid=0; //para guardar el id del proceso
@@ -57,17 +58,22 @@ int main(int argc, char * argv[]){
 		//CREAMOS EL HILO
 		int retorno;//printf("hola mundo, soy el hilo main \n");
 	  pthread_t tid;
-	  retorno = pthread_create(&tid, NULL, hilo, (void *) ipStr ); // CREANDO EL HILO
-	  if (retorno == 0){
+		pthread_attr_t atributo;
+		pthread_attr_init(&atributo);
+		pthread_attr_setdetachstate(&atributo,PTHREAD_CREATE_DETACHED);
+
+		retorno = pthread_create(&tid, &atributo, hilo, (void *) ipStr ); // CREANDO EL HILO
+
+		if (retorno == 0){
 	    printf("guardando datos de conxion\n");
 	  }
-
-		//CREAMOS UN PROCESOS PARA CADA CLIENTE QUE SE CONECTA AL SERVIDOR
+			//CREAMOS UN PROCESOS PARA CADA CLIENTE QUE SE CONECTA AL SERVIDOR
 		pid=fork();//responder el cliente
 		if(pid==0){
 			if(menu((void*) (intptr_t) connfd, ipStr,fd_empleados_on, sem_empleados_on)==0){
 				printf("Cerramos conexion\n");
 				close(connfd); //cerramos el fd de la conexion
+				return 0;
 			}
 		}
 
@@ -106,7 +112,6 @@ char *serchIpPort(int i){
 
 
     while(*aux_archivo!='\0'){
-
       if((!strcmp(palabra,"ip: ") || acceso==1) && *aux_archivo!='\n'){ //este va a entrar hasta que el primer if le saque el acceso
         letra=*aux_archivo;
         acceso=1;
@@ -118,7 +123,6 @@ char *serchIpPort(int i){
         //printf("dato_puerto->-%c-\n",letra);
         strncat(portSrvStr,&letra,1);
       }
-
       if(*aux_archivo!='\n'){
         strncat(palabra,&(*aux_archivo),1);
       }else{
